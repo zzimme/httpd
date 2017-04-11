@@ -1,0 +1,32 @@
+{
+	"port":"8080",
+	"hosts":[{
+		"serverName":"localhost:8080",
+		"documentRoot":"E:\\temp\\a",
+		"forbidden":"403.html",
+		"notFound":"404.html",
+		"serverError":"500.html"
+		},
+		{
+		"serverName":"192.168.0.11:8080",
+		"documentRoot":"E:\\temp\\a",
+		"forbidden":"403.html",
+		"notFound":"404.html",
+		"serverError":"500.html"
+		},
+		{
+		"serverName":"a.com:8080",
+		"documentRoot":"/usr/local/a",
+		"forbidden":"403.html",
+		"notFound":"404.html",
+		"serverError":"500.html"
+		},
+		{
+		"serverName":"b.com:8080",
+		"documentRoot":"/usr/local/b",
+		"forbidden":"403.html",
+		"notFound":"404.html",
+		"serverError":"500.html"
+		}
+	]
+}
