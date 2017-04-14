@@ -40,7 +40,7 @@ public class HttpServer {
 		while (true) {
 			try {
 				Socket connection = server.accept();
-				
+				logger.info("connection:{}",connection);
 				ClassFileBeanFactory factory = new ClassFileBeanFactory();
 				RequestHandler requestHandler = new RequestHandler(connection,factory);
 				pool.submit(requestHandler);

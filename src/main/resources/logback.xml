@@ -28,6 +28,6 @@
 	<logger name="org.reflections.Reflections" level="INFO" additivity="false"/>
 	
 	<root level="INFO">
-		<appender-ref ref="ROLLING" />
+		<appender-ref ref="STDOUT" />
 	</root>
 </configuration>

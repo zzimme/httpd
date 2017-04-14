@@ -37,6 +37,11 @@ public class RequestProcessor {
 		if (this.requestMapping != null && (servlet = requestMapping.get(req.getFileName())) != null) {
 
 			try {
+				
+				/*
+				 * Todo
+				 * Method check;
+				 * */
 				servlet.service(req, res);
 
 				String body = res.getWriter().toString();
@@ -93,6 +98,12 @@ public class RequestProcessor {
 		}
 	}
 
+	
+	/*
+	 * Todo
+	 * Filter chain pattern으로 변경
+	 * 확장자 처
+	 * */
 	public boolean validFile(File file) throws IOException {
 		String contentType = new MimetypesFileTypeMap().getContentType(file);
 
