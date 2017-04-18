@@ -69,6 +69,7 @@ public class HttpRequest implements Request{
 			this.queryString = matcher.group(3);
 			this.pathInfo = this.requestURI.substring(matcher.group(1).length());
 			
+			
 			if(method.equals("GET") && this.queryString.length() > 0){
 				String[] querys = this.queryString.split("&");
 				for (String query : querys) {
@@ -115,6 +116,7 @@ public class HttpRequest implements Request{
 		this.path = path;
 	}
 
+	@Override
 	public String getFileName(){
 		return this.fileName;
 	}

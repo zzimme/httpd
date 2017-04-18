@@ -6,6 +6,8 @@ import static org.junit.Assert.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.After;
 import org.junit.Before;
@@ -23,6 +25,7 @@ public class HttpRequestTest {
 	
 	private String firstSite;
 	private String secondSite;
+	private String pathCheck;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -37,6 +40,12 @@ public class HttpRequestTest {
 		b.append("HOST: b.com:8080\r\n");
 		b.append("\r\n");
 		secondSite = b.toString();
+		
+		StringBuffer path = new StringBuffer();
+		path.append("GET /../../../get/index.html HTTP 1.1\r\n");
+		path.append("HOST: b.com:8080\r\n");
+		path.append("\r\n");
+		pathCheck = path.toString();
 	}
 
 	@Test
@@ -66,6 +75,22 @@ public class HttpRequestTest {
 		assertThat(aHost.getDocumentRoot(), not(bHost.getDocumentRoot()));
 		
 	}
+	
+	@Test
+	public void checkPath(){
+		InputStream is = new ByteArrayInputStream(pathCheck.getBytes());
+		
+		HttpRequest request = new HttpRequest(is);
+		
+		System.out.println(request.getPath());
+		System.out.println(request.getFileName());
+		System.out.println(request.getMethod());
+		System.out.println(request.getRequestURI());
+		
+		
+		
+	}
+	
 	
 	@After
 	public void after() throws IOException{

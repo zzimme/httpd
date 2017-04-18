@@ -9,5 +9,6 @@ public interface Request {
 	public String getHost();
 	public String getRequestURI();
 	public String getHeader(String name);
+	public String getFileName();
 	
 }

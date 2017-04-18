@@ -14,6 +14,9 @@ import com.marine.httpd.codec.HttpRequest;
 import com.marine.httpd.codec.HttpResponse;
 import com.marine.httpd.exception.ForbiddenException;
 import com.marine.httpd.exception.NotFoundException;
+import com.marine.httpd.filter.ExtensionFilter;
+import com.marine.httpd.filter.FilterChain;
+import com.marine.httpd.filter.PathValidationFilter;
 import com.marine.httpd.model.Host;
 import com.marine.httpd.servlet.SimpleServlet;
 
@@ -77,7 +80,12 @@ public class RequestProcessor {
 				if (!file.exists()) {
 					throw new NotFoundException();
 				}
-				if (!validFile(file)) {
+				
+				FilterChain chain = new FilterChain();
+				chain.addFilter(new PathValidationFilter());
+				chain.addFilter(new ExtensionFilter());
+				
+				if (!chain.execute(req)) {
 					throw new ForbiddenException();
 				}
 
