@@ -28,6 +28,7 @@ public class RequestProcessor {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public RequestProcessor(Host host, Map<String, SimpleServlet> requsetMapping, String encoding) {
+		logger.info("host===={}",host);
 		this.host = host;
 		this.encoding = encoding;
 		this.requestMapping = requsetMapping;
@@ -37,7 +38,9 @@ public class RequestProcessor {
 			throws IOException, NotFoundException, ForbiddenException {
 		SimpleServlet servlet;
 
-		if (this.requestMapping != null && (servlet = requestMapping.get(req.getFileName())) != null) {
+		String requestServletName = req.getPathInfo().substring(1);
+		
+		if (this.requestMapping != null && (servlet = requestMapping.get(requestServletName)) != null) {
 
 			try {
 				
@@ -64,6 +67,7 @@ public class RequestProcessor {
 			String documentRoot = host.getDocumentRoot();
 
 			if (documentRoot.length() < 1) {
+				logger.info("===============");
 				throw new ForbiddenException();
 			} else {
 
@@ -106,19 +110,5 @@ public class RequestProcessor {
 		}
 	}
 
-	
-	/*
-	 * Todo
-	 * Filter chain pattern으로 변경
-	 * 확장자 처
-	 * */
-	public boolean validFile(File file) throws IOException {
-		String contentType = new MimetypesFileTypeMap().getContentType(file);
 
-		if (contentType.equals("application/octet-stream") == true || file.getName().endsWith("exe")) {
-			return false;
-		}
-
-		return true;
-	}
 }

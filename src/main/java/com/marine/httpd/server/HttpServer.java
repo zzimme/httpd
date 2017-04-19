@@ -21,11 +21,13 @@ public class HttpServer {
 
 	private int port;
 	private ServerSocket server;
+	private ClassFileBeanFactory factory;
 	
 	public HttpServer() throws IOException {
 
 		ConfigMap configMap = new ConfigMap();
 		ServerConfig config = ConfigMap.getConfig();
+		this.factory = new ClassFileBeanFactory();
 
 		this.port = config.getPort() < 0 || config.getPort() > 65535 ? this.DEFAULT_PORT : config.getPort();
 		
@@ -41,7 +43,7 @@ public class HttpServer {
 			try {
 				Socket connection = server.accept();
 				logger.info("connection:{}",connection);
-				ClassFileBeanFactory factory = new ClassFileBeanFactory();
+				
 				RequestHandler requestHandler = new RequestHandler(connection,factory);
 				pool.submit(requestHandler);
 			} catch (IOException ex) {

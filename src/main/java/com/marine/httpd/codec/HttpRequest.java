@@ -62,12 +62,12 @@ public class HttpRequest implements Request{
 		
 		Pattern pattern = Pattern.compile("(.*\\/)([^\\/?]*)\\??(.*$)");
 		Matcher matcher = pattern.matcher(this.requestURI);
-		
+		logger.debug("URI::{}",this.requestURI);
 		if(matcher.matches()){
 			this.path = matcher.group(1);
 			this.fileName = matcher.group(2);
 			this.queryString = matcher.group(3);
-			this.pathInfo = this.requestURI.substring(matcher.group(1).length());
+			this.pathInfo = matcher.group(1)+matcher.group(2);
 			
 			
 			if(method.equals("GET") && this.queryString.length() > 0){

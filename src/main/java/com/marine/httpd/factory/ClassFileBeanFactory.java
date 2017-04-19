@@ -12,7 +12,7 @@ import com.marine.httpd.servlet.SimpleServlet;
 
 public class ClassFileBeanFactory implements BeanFactory{
 	
-	private final Logger log = LoggerFactory.getLogger(ClassFileBeanFactory.class);
+	private final Logger logger = LoggerFactory.getLogger(ClassFileBeanFactory.class);
 	private Map<String, SimpleServlet> map = new HashMap<String, SimpleServlet>();
 	
 	
@@ -24,10 +24,11 @@ public class ClassFileBeanFactory implements BeanFactory{
 		
 		for (Class<?> item : list) {
 			String key = item.getName().substring(scanPackageName.length()+1);
+			logger.debug("{} class is mappring done!", key);
 			try {
 				map.put(key, (SimpleServlet) item.newInstance());
 			} catch (InstantiationException | IllegalAccessException e) {
-				log.error("class mapping error!", e);
+				logger.error("class mapping error!", e);
 			}
 		
 		}

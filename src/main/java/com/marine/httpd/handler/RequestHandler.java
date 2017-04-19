@@ -45,6 +45,8 @@ public class RequestHandler extends Thread {
 			HttpResponse res	= new HttpResponse();
 			this.host			= ConfigMap.getHost(req.getHost());
 			
+			if(this.host == null) throw new NullPointerException();
+			
 			RequestProcessor rm = new RequestProcessor(this.host, this.factory.getMap(), "UTF-8");
 			
 			rm.getResponse(req, res);
@@ -69,6 +71,7 @@ public class RequestHandler extends Thread {
 				
 			}
 		} catch ( Exception ex){
+			
 			try {
 				sendError(new OutputStreamWriter(connection.getOutputStream()), "500", host);
 			} catch (IOException e) {
@@ -89,35 +92,43 @@ public class RequestHandler extends Thread {
 		String fileName = "";
 		String httpVersion = String.format("%s %s %s \r\n", "HTTP/1.1", statusCode, HttpResponse.status.get(statusCode));
 		out.write(httpVersion);
-		
-		switch (statusCode) {
-		case "403":
-			fileName = host.getForbidden();
-			break;
-		case "404":
-			fileName = host.getNotFound();
-			break;
-		case "500":
-			fileName = host.getServerError();
-			break;
-		default:
-			fileName = host.getServerError();
-			break;
-		}
-		
-		
-		File root = new File(host.getDocumentRoot());
-		File file = new File(root, fileName);
-		
-		String contentType = new MimetypesFileTypeMap().getContentType(file);
-		
-		if (file.canRead() && file.getCanonicalPath().startsWith(host.getDocumentRoot())) {
-			byte[] data = Files.readAllBytes(file.toPath());
-			out.write("Content-Length: "+ data.length + "\r\n");
-			out.write("Content-Type: "+ contentType + "\r\n");
-			out.write("\r\n");
-			out.write(new String(data));
+	
+		if(host != null){
+			switch (statusCode) {
+			case "403":
+				fileName = host.getForbidden();
+				break;
+			case "404":
+				fileName = host.getNotFound();
+				break;
+			case "500":
+				fileName = host.getServerError();
+				break;
+			default:
+				fileName = host.getServerError();
+				break;
+			}
 			
+			
+			File root = new File(host.getDocumentRoot());
+			File file = new File(root, fileName);
+			
+			String contentType = new MimetypesFileTypeMap().getContentType(file);
+			
+			if (file.canRead() && file.getCanonicalPath().startsWith(host.getDocumentRoot())) {
+				byte[] data = Files.readAllBytes(file.toPath());
+				out.write("Content-Length: "+ data.length + "\r\n");
+				out.write("Content-Type: "+ contentType + "\r\n");
+				out.write("\r\n");
+				out.write(new String(data));
+				
+			}else{
+				String data = "Server Error!";
+				out.write("Content-length: "+ data.length() + "\r\n");
+				out.write("Content-Type: text/html;charset=UTF-8 \r\n");
+				out.write("\r\n");
+				out.write(new String(data));
+			}
 		}else{
 			String data = "Server Error!";
 			out.write("Content-length: "+ data.length() + "\r\n");
@@ -125,7 +136,6 @@ public class RequestHandler extends Thread {
 			out.write("\r\n");
 			out.write(new String(data));
 		}
-		
 		out.flush();
 	}
 }
